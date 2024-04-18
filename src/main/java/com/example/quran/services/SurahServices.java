@@ -70,12 +70,12 @@ public class SurahServices {
             if (optionalSurah.isPresent()) {
                 Surah surah = optionalSurah.get();
 
-                SurahData surahData = new SurahData();
-                surahData.setId(Long.toString(surah.getId()));
-                surahData.setAudioUrl(surah.getAudioUrl());
-                surahData.setNumber(Integer.toString(surah.getNumber()));
-                surahData.setSurahName(surah.getNameId());
-                surahData.setTranslateId(surah.getTranslationId());
+                DetailSurahData detailSurahData = new DetailSurahData();
+                detailSurahData.setId(Long.toString(surah.getId()));
+                detailSurahData.setAudioUrl(surah.getAudioUrl());
+                detailSurahData.setNumber(Integer.toString(surah.getNumber()));
+                detailSurahData.setSurahName(surah.getNameId());
+                detailSurahData.setTranslateId(surah.getTranslationId());
 
                 // Ambil daftar Ayah berdasarkan Surah
                 List<Ayah> ayahList = ayahRepository.findBySurahId(surahId);
@@ -88,10 +88,9 @@ public class SurahServices {
                     ayahDataList.add(ayahData);
                 }
 
-                surahResponse.setMessageResponse(new MessageResponse(false, "Surah detail retrieved successfully"));
-                DetailSurahData detailSurahData = new DetailSurahData();
-                detailSurahData.setSurahData(surahData);
                 detailSurahData.setAyahData(ayahDataList);
+
+                surahResponse.setMessageResponse(new MessageResponse(false, "Surah detail retrieved successfully"));
                 surahResponse.setData(detailSurahData);
             } else {
                 surahResponse.setMessageResponse(new MessageResponse(true, "Surah with ID " + surahId + " not found"));

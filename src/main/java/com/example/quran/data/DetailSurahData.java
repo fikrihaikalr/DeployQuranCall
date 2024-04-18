@@ -7,6 +7,10 @@ import java.util.List;
 
 @Data
 public class DetailSurahData {
-    private SurahData surahData;
+    private String id;
+    private String audioUrl;
+    private String number;
+    private String surahName;
+    private String translateId;
     private List<AyahData> ayahData;
 }
