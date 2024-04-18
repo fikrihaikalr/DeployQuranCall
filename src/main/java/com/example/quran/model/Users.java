@@ -28,9 +28,8 @@ public class Users{
     @Column(nullable = false)
     private String password;
     private String photoPath;
-    @Column(unique = true, nullable = false)
+    @Column(unique = true)
     private String numberPhone;
-    @Column(nullable = false)
     private String status;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -43,12 +42,10 @@ public class Users{
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
 
-    public Users(String username, String email, String password, String numberPhone, String status) {
+    public Users(String username, String email, String password) {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.numberPhone = numberPhone;
-        this.status = status;
     }
 
 }

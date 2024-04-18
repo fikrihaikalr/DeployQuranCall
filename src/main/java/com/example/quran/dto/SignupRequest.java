@@ -28,9 +28,5 @@ public class SignupRequest {
     @Size(min = 8, max = 40, message = "Minimal 8 Karakter!")
     @NotNull
     private String password;
-    @NotNull
-    private String numberPhone;
-    @NotNull
-    private String status;
     private Set<String> role;
 }

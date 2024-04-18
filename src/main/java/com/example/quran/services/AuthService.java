@@ -92,9 +92,7 @@ public AuthenticationResponse loginUser(LoginRequest loginRequest) {
 
         Users user = new Users(signUpRequest.getUsername(),
                 signUpRequest.getEmail(),
-                encoder.encode(signUpRequest.getPassword()),
-                signUpRequest.getNumberPhone(),
-                signUpRequest.getStatus());
+                encoder.encode(signUpRequest.getPassword()));
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();
