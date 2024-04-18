@@ -2,6 +2,7 @@ package com.example.quran.services;
 
 
 import com.example.quran.data.AyahData;
+import com.example.quran.data.DetailSurahData;
 import com.example.quran.data.SurahData;
 import com.example.quran.model.Ayah;
 import com.example.quran.model.Surah;
@@ -65,8 +66,10 @@ public class SurahServices {
 
         try {
             // Ambil detail Surah berdasarkan ID
-            Surah surah = surahRepository.findById(surahId).orElse(null);
-            if (surah != null) {
+            Optional<Surah> optionalSurah = surahRepository.findById(surahId);
+            if (optionalSurah.isPresent()) {
+                Surah surah = optionalSurah.get();
+
                 SurahData surahData = new SurahData();
                 surahData.setId(Long.toString(surah.getId()));
                 surahData.setAudioUrl(surah.getAudioUrl());
@@ -86,7 +89,10 @@ public class SurahServices {
                 }
 
                 surahResponse.setMessageResponse(new MessageResponse(false, "Surah detail retrieved successfully"));
-                surahResponse.setData(surahData);
+                DetailSurahData detailSurahData = new DetailSurahData();
+                detailSurahData.setSurahData(surahData);
+                detailSurahData.setAyahData(ayahDataList);
+                surahResponse.setData(detailSurahData);
             } else {
                 surahResponse.setMessageResponse(new MessageResponse(true, "Surah with ID " + surahId + " not found"));
             }
@@ -94,7 +100,6 @@ public class SurahServices {
             surahResponse.setMessageResponse(new MessageResponse(true, "Failed to retrieve Surah detail: " + e.getMessage()));
         }
 
-        surahResponse.setAyah(ayahDataList);
         return surahResponse;
     }
 
