@@ -57,7 +57,7 @@ public class UserController {
     public ResponseEntity<?> getTeacherUsers(){
         if (userService.performMaintenance()) {
             // Jika aplikasi sedang dalam mode maintenance, kembalikan respons Service Unavailable (kode status 503)
-            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Aplikasi sedang dalam maintenance. Silakan coba lagi nanti.");
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new MessageResponse(true, "Aplikasi sedang dalam maintenance. Silakan coba lagi nanti."));
         } else {
             // Jika tidak dalam mode maintenance, kembalikan data guru
             return ResponseEntity.ok(userService.getTeacherRole());
