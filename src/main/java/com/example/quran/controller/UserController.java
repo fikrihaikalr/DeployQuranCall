@@ -55,7 +55,13 @@ public class UserController {
 
     @GetMapping("/guru")
     public ResponseEntity<?> getTeacherUsers(){
-        return ResponseEntity.ok(userService.getTeacherRole());
+        if (userService.performMaintenance()) {
+            // Jika aplikasi sedang dalam mode maintenance, kembalikan respons Service Unavailable (kode status 503)
+            return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Aplikasi sedang dalam maintenance. Silakan coba lagi nanti.");
+        } else {
+            // Jika tidak dalam mode maintenance, kembalikan data guru
+            return ResponseEntity.ok(userService.getTeacherRole());
+        }
     }
     @GetMapping("/guru/{userId}")
     public ResponseEntity<?> getTeacherById(@PathVariable Long userId) {

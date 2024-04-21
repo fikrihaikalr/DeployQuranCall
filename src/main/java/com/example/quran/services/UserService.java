@@ -11,6 +11,7 @@ import com.example.quran.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -22,6 +23,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -175,6 +177,21 @@ public class UserService {
 
     public boolean checkIfValidOldPassword(Users user, String oldPassword) {
         return passwordEncoder.matches(oldPassword, user.getPassword());
+    }
+
+    @Scheduled(cron = "0 0 20-21 * * *")
+    public boolean performMaintenance() {
+        LocalDateTime now = LocalDateTime.now();
+        int hour = now.getHour();
+
+        // Periksa apakah waktu saat ini berada di rentang waktu maintenance (pukul 8 malam hingga 9 malam)
+        if (hour >= 20 && hour < 21) {
+            System.out.println("Aplikasi sedang dalam Maintenance");
+            return true;
+        }
+
+        // Jika waktu saat ini bukan dalam rentang waktu maintenance
+        return false;
     }
 
 //    @Transactional
