@@ -24,6 +24,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 @Service
@@ -181,7 +182,7 @@ public class UserService {
 
     @Scheduled(cron = "0 0 20-21 * * *")
     public boolean performMaintenance() {
-        LocalDateTime now = LocalDateTime.now();
+        LocalDateTime now = LocalDateTime.now(ZoneId.of("Asia/Jakarta"));
         int hour = now.getHour();
 
         // Periksa apakah waktu saat ini berada di rentang waktu maintenance (pukul 8 malam hingga 9 malam)
