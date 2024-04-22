@@ -7,4 +7,5 @@ public class SubMateriData {
     private String id;
     private String author;
     private String title;
+    private String content;
 }

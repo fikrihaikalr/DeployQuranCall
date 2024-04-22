@@ -1,10 +1,13 @@
 package com.example.quran.services;
 
+import com.example.quran.data.SubMateriData;
 import com.example.quran.dto.SubMateriDTO;
 import com.example.quran.model.Materi;
 import com.example.quran.model.Submateri;
 import com.example.quran.repository.MateriRepository;
 import com.example.quran.repository.SubmateriRepository;
+import com.example.quran.response.DetailSubMateriResponse;
+import com.example.quran.response.MessageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +26,20 @@ public class SubmateriService {
         return submateriRepository.findAll();
     }
 
-    public Submateri getSubmateriByMateriId(Long subMateriId){
-        return submateriRepository.findById(subMateriId).orElse(null);
+    public DetailSubMateriResponse getSubmateriByMateriId(Long subMateriId){
+        Submateri submateri = submateriRepository.findById(subMateriId).orElse(null);
+        if(submateri == null){
+            return null;
+        }
+        DetailSubMateriResponse detailSubMateriResponse = new DetailSubMateriResponse();
+        detailSubMateriResponse.setMessageResponse(new MessageResponse(false, "Get Submateri By Id Success"));
+        SubMateriData subMateriData = new SubMateriData();
+        subMateriData.setId(Long.toString(submateri.getId()));
+        subMateriData.setAuthor(submateri.getAuthor());
+        subMateriData.setTitle(submateri.getTitle());
+        subMateriData.setContent(submateri.getContent());
+        detailSubMateriResponse.setData(subMateriData);
+        return detailSubMateriResponse;
     }
 
     public Optional<Submateri> getSubmateriById(Long id){

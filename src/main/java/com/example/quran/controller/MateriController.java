@@ -39,7 +39,7 @@ public class MateriController {
     }
 
     @GetMapping("/submateri/{subMateriId}")
-    public ResponseEntity<Submateri> getSubMateriById(@PathVariable Long subMateriId){
+    public ResponseEntity<?> getSubMateriById(@PathVariable Long subMateriId){
         return ResponseEntity.ok(submateriService.getSubmateriByMateriId(subMateriId));
     }
 
@@ -54,8 +54,12 @@ public class MateriController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Submateri> createSubMateri(@RequestBody @Valid SubMateriDTO subMateriDTO){
+    public ResponseEntity<?> createSubMateri(@RequestBody @Valid SubMateriDTO subMateriDTO){
         Submateri createdSubmateri = submateriService.createSubMateri(subMateriDTO);
-        return new ResponseEntity<>(createdSubmateri, HttpStatus.CREATED);
+        if(createdSubmateri != null){
+            return ResponseEntity.ok(new MessageResponse(false, "Successfully Create SubMateri"));
+        }else {
+            return ResponseEntity.badRequest().body(new MessageResponse(true, "Must Be Failed!"));
+        }
     }
 }
