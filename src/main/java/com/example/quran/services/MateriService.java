@@ -62,6 +62,7 @@ public class MateriService {
                 subMateriData.setId(Long.toString(subMateri.getId()));
                 subMateriData.setAuthor(subMateri.getAuthor());
                 subMateriData.setTitle(subMateri.getTitle());
+                subMateriData.setContent(subMateri.getContent());
                 subMateriDataList.add(subMateriData);
             }
 
