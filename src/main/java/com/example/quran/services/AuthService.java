@@ -42,6 +42,9 @@ public class AuthService {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    ValidationService validationService;
+
 //    public AuthenticationResponse loginUser(LoginRequest loginRequest) {
 //
 //            Authentication authentication = authenticationManager
@@ -86,6 +89,7 @@ public AuthenticationResponse loginUser(LoginRequest loginRequest) {
 }
 
     public void registerUser(SignupRequest signUpRequest) {
+        validationService.validate(signUpRequest);
         if (userRepository.existsByEmail(signUpRequest.getEmail())) {
             throw new IllegalArgumentException("Error: Email is already in use!");
         }
