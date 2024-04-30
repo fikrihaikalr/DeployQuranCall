@@ -58,17 +58,8 @@ public class WebSecurityConfig {
         http.cors().and().csrf().disable()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-                .authorizeRequests().antMatchers("/api/**").permitAll()
+                .authorizeRequests().antMatchers("/api/signin").permitAll()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                .antMatchers("/api/ayah/**").permitAll()
-                .antMatchers("/api/invoice/**").permitAll()
-                .antMatchers("/api/schedule/**").permitAll()
-                .antMatchers("/api/passenger/**").permitAll()
-                .antMatchers("/api/user/**").permitAll()
-                .antMatchers("/api/aircraft/**").permitAll()
-                .antMatchers("/api/airport/**").permitAll()
-                .antMatchers("/api/route/**").permitAll()
-                .antMatchers("/oauth2/callback/google").permitAll()
                 .anyRequest().authenticated();
 
         http.authenticationProvider(authenticationProvider());
