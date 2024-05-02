@@ -63,4 +63,10 @@ public class MateriController {
             return ResponseEntity.badRequest().body(new MessageResponse(true, "Must Be Failed!"));
         }
     }
+
+    @DeleteMapping("/{materiId}")
+    public ResponseEntity<?> deleteMateri(Long materiId){
+        materiService.deleteMateri(materiId);
+        return ResponseEntity.ok(new MessageResponse(false, "Delete Materi Is Successfull!"));
+    }
 }

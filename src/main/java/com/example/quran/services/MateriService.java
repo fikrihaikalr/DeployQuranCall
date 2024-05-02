@@ -85,4 +85,8 @@ public class MateriService {
 //        materiRepository.save(materi)
         return materiRepository.save(materi);
     }
+
+    public void deleteMateri(Long id){
+        materiRepository.deleteById(id);
+    }
 }
