@@ -65,7 +65,7 @@ public class MateriController {
     }
 
     @DeleteMapping("/{materiId}")
-    public ResponseEntity<?> deleteMateri(Long materiId){
+    public ResponseEntity<?> deleteMateri(@PathVariable Long materiId){
         materiService.deleteMateri(materiId);
         return ResponseEntity.ok(new MessageResponse(false, "Delete Materi Is Successfull!"));
     }
