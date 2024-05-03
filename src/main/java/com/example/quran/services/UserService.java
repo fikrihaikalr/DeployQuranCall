@@ -224,7 +224,8 @@ public class UserService {
 //    }
 
     public void changePassword(String username, String oldPassword, String newPassword) {
-        Users user = usersRepository.findByUsername(username);
+        Users user = usersRepository.findByUsername(username)
+                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + username));;
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             new MessageResponse(true, "Invalid Password");
         }
