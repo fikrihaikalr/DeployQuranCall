@@ -198,66 +198,8 @@ public class UserService {
         return false;
     }
 
-//    @Transactional
-//    public void changeUserPasswordByEmail(ChangePasswordRequest changePasswordRequest) throws Exception {
-//        String email = changePasswordRequest.getEmail();
-//        String oldPassword = changePasswordRequest.getOldPassword();
-//        String newPassword = changePasswordRequest.getNewPassword();
-//
-//        // Cari pengguna berdasarkan email
-//        Users user = usersRepository.findByEmail(email)
-//                .orElseThrow(() -> new Exception("User with email " + email + " not found"));
-//
-//        // Verifikasi kecocokan password lama
-//        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-//            throw new Exception("Old password is incorrect");
-//        }
-//
-//        // Enkode password baru
-//        String encodedPassword = passwordEncoder.encode(newPassword);
-//
-//        // Set password baru
-//        user.setPassword(encodedPassword);
-//
-//        // Simpan perubahan
-//        usersRepository.save(user);
-//
-//    }
-
-    @Transactional
-    public boolean changeUserPasswordByEmail(ChangePasswordRequest changePasswordRequest) {
-        String email = changePasswordRequest.getEmail();
-        String oldPassword = changePasswordRequest.getOldPassword();
-        String newPassword = changePasswordRequest.getNewPassword();
-
-        // Cari pengguna berdasarkan email
-        Optional<Users> optionalUser = usersRepository.findByEmail(email);
-        if (!optionalUser.isPresent()) {
-            return false; // Pengguna tidak ditemukan
-        }
-        Users user = optionalUser.get();
-
-        // Verifikasi kecocokan password lama
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            return false; // Password lama tidak cocok
-        }
-
-        // Enkode password baru
-        String encodedPassword = passwordEncoder.encode(newPassword);
-
-        // Set password baru
-        user.setPassword(encodedPassword);
-
-        // Simpan perubahan
-        usersRepository.save(user);
-
-        return true; // Perubahan password berhasil
-    }
-
-    @Transactional
     public void changePasswordUser(ChangePasswordRequest changePasswordDTO) {
         validationService.validate(changePasswordDTO);
-//        MessageResponse messageResponse;
         // Cari pengguna berdasarkan username
         Users user = usersRepository.findByEmail1(changePasswordDTO.getEmail());
 
