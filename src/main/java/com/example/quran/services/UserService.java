@@ -223,9 +223,9 @@ public class UserService {
 //        usersRepository.save(user);
 //    }
 
-    public void changePassword(String username, String oldPassword, String newPassword) {
-        Users user = usersRepository.findByUsername(username)
-                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + username));;
+    public void changePassword(String email, String oldPassword, String newPassword) {
+        Users user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));;
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             new MessageResponse(true, "Invalid Password");
         }
