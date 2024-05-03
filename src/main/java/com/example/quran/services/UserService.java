@@ -227,21 +227,29 @@ public class UserService {
 //        usersRepository.save(user);
 //    }
 
-    public void changePassword(String email, String oldPassword, String newPassword) {
-        Users user = usersRepository.findByEmail(email)
-                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));
+//    public void changePassword(String email, String oldPassword, String newPassword) {
+//        Users user = usersRepository.findByEmail(email)
+//                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));
+//
+//        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+//            throw new IllegalArgumentException("Invalid Password");
+//        }
+//
+//        if (newPassword == null) {
+//            throw new IllegalArgumentException("New password cannot be null");
+//        }
+//
+//        String encodedNewPassword = passwordEncoder.encode(newPassword);
+//        user.setPassword(encodedNewPassword);
+//        usersRepository.save(user);
+//    }
 
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new IllegalArgumentException("Invalid Password");
+    public void changePassword(Users users, String currentPassword, String newPassword){
+        if(currentPassword == null || !passwordEncoder.matches(currentPassword, users.getPassword())){
+            throw new RuntimeException("Invalid");
         }
-
-        if (newPassword == null) {
-            throw new IllegalArgumentException("New password cannot be null");
-        }
-
-        String encodedNewPassword = passwordEncoder.encode(newPassword);
-        user.setPassword(encodedNewPassword);
-        usersRepository.save(user);
+        users.setPassword(passwordEncoder.encode(newPassword));
+        usersRepository.save(users);
     }
 
 
