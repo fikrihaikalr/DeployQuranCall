@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.security.Principal;
 
 @RestController
 @RequestMapping("/api")
@@ -101,10 +102,19 @@ public class UserController {
         userService.changePhoto(id, file);
         return ResponseEntity.ok("Photo Changed Successfully");
     }
+//    @PostMapping("/change-password")
+//    public ResponseEntity<String> changePassword(@Validated @RequestBody ChangePasswordRequest changePasswordDTO) {
+//        userService.changePasswordUser(changePasswordDTO);
+//        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
+//    }
     @PostMapping("/change-password")
-    public ResponseEntity<String> changePassword(@Validated @RequestBody ChangePasswordRequest changePasswordDTO) {
-        userService.changePasswordUser(changePasswordDTO);
-        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
+    try {
+        userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok().build();
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
+}
 
 }

@@ -223,4 +223,15 @@ public class UserService {
         usersRepository.save(user);
     }
 
+    public void changePassword(String username, String oldPassword, String newPassword) {
+        Users user = usersRepository.findByUsername(username);
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            new MessageResponse(true, "Invalid Password");
+        }
+
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedNewPassword);
+        usersRepository.save(user);
+    }
+
 }
