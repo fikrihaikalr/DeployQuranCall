@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -100,43 +101,10 @@ public class UserController {
         userService.changePhoto(id, file);
         return ResponseEntity.ok("Photo Changed Successfully");
     }
-
-    @PostMapping("/change-password")
-//    public ResponseEntity<> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) {
-//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//        String username = authentication.getName();
-//        String currentPassword = changePasswordRequest.getOldPassword();
-//        String newPassword = changePasswordRequest.getNewPassword();
-//
-//        userService.changePassword(username, currentPassword, newPassword);
-//
-//        return ResponseEntity.ok("Password changed successfully");
-//    }
-//    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest) throws Exception{
-//        UserDTO pDTO = new UserDTO();
-//        pDTO.setEmail(changePasswordRequest.getEmail());
-//        pDTO.setPassword(changePasswordRequest.getOldPassword());
-//
-//        int check = userService.changeUserPassword(pDTO, changePasswordRequest.getNewPassword());
-//
-//        if(check == 1){
-//            return ResponseEntity.status(HttpStatus.OK).body("Berhasil");
-//
-//        }
-//        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("gagal");
-//    }
-    public ResponseEntity<?> changeUserPasswordByEmail(@RequestBody @Valid ChangePasswordRequest changePasswordRequest) throws Exception {
-        userService.changeUserPasswordByEmail(changePasswordRequest);
-        return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
+    @PostMapping("/change")
+    public ResponseEntity<String> changePassword(@Validated @RequestBody ChangePasswordRequest changePasswordDTO) {
+        userService.changePasswordUser(changePasswordDTO);
+        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
     }
-
-//    @PatchMapping("/change-password")
-//    public ResponseEntity<?> changePassword(
-//            @RequestBody ChangePasswordRequest request,
-//            Principal connectedUser
-//    ) {
-//        userService.changePassword(request, connectedUser);
-//        return ResponseEntity.ok().build();
-//    }
 
 }

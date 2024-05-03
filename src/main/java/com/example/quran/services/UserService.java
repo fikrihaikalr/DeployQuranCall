@@ -41,6 +41,9 @@ public class UserService {
     @Autowired
     RoleRepository roleRepository;
 
+    @Autowired
+    ValidationService validationService;
+
 
     public Users getUserById(Long id){
         log.info("Get Data User By Id Succses!");
@@ -249,6 +252,32 @@ public class UserService {
         usersRepository.save(user);
 
         return true; // Perubahan password berhasil
+    }
+
+    public void changePasswordUser(ChangePasswordRequest changePasswordDTO) {
+        validationService.validate(changePasswordDTO);
+//        MessageResponse messageResponse;
+        // Cari pengguna berdasarkan username
+        Users user = usersRepository.findByEmail1(changePasswordDTO.getEmail());
+
+        // Periksa apakah pengguna ditemukan
+        if (user == null) {
+            new MessageResponse(true, "User not found");
+        }
+
+        // Periksa apakah kata sandi lama sesuai
+        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
+            new MessageResponse(true, "Incorrect old password");
+        }
+
+        // Enkripsi kata sandi baru
+        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+
+        // Tetapkan kata sandi baru yang terenkripsi ke pengguna
+        user.setPassword(encodedNewPassword);
+
+        // Simpan perubahan ke dalam database
+        usersRepository.save(user);
     }
 
 }
