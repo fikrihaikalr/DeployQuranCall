@@ -101,7 +101,7 @@ public class UserController {
         userService.changePhoto(id, file);
         return ResponseEntity.ok("Photo Changed Successfully");
     }
-    @PostMapping("/change")
+    @PostMapping("/change-password")
     public ResponseEntity<String> changePassword(@Validated @RequestBody ChangePasswordRequest changePasswordDTO) {
         userService.changePasswordUser(changePasswordDTO);
         return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
