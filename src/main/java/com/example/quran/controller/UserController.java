@@ -1,14 +1,13 @@
 package com.example.quran.controller;
 
+import com.example.quran.dto.ChangePassRequest;
 import com.example.quran.dto.ChangePasswordRequest;
 import com.example.quran.model.Users;
 import com.example.quran.repository.UsersRepository;
-import com.example.quran.response.DetailRoleResponse;
-import com.example.quran.response.RoleResponse;
-import com.example.quran.response.MessageResponse;
-import com.example.quran.response.UserDetailsResponse;
+import com.example.quran.response.*;
 import com.example.quran.services.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -56,7 +55,7 @@ public class UserController {
 //    }
 
     @GetMapping("/guru")
-    public ResponseEntity<?> getTeacherUsers(){
+    public ResponseEntity<?> getTeacherUsers() {
         if (userService.performMaintenance()) {
             // Jika aplikasi sedang dalam mode maintenance, kembalikan respons Service Unavailable (kode status 503)
             return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new MessageResponse(true, "Aplikasi sedang dalam maintenance. Silakan coba lagi nanti."));
@@ -65,6 +64,7 @@ public class UserController {
             return ResponseEntity.ok(userService.getTeacherRole());
         }
     }
+
     @GetMapping("/guru/{userId}")
     public ResponseEntity<?> getTeacherById(@PathVariable Long userId) {
         DetailRoleResponse teacherDetail = userService.getTeacherRoleDetail(userId);
@@ -107,14 +107,24 @@ public class UserController {
 //        userService.changePasswordUser(changePasswordDTO);
 //        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
 //    }
+//    @PostMapping("/change-password")
+//    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
+//    try {
+//        userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
+//        return ResponseEntity.ok().build();
+//    } catch (Exception e) {
+//        return ResponseEntity.badRequest().body(e.getMessage());
+//    }
+//}
+
     @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
-    try {
-        userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
-        return ResponseEntity.ok().build();
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
+    public ResponseEntity<?> changePassword(@RequestBody ChangePassRequest request, Principal principal) {
+        try {
+            userService.changePasswordPrincipal(request, principal);
+            return ResponseEntity.ok().build();
+        } catch (InvalidPasswordException | PasswordMismatchException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
-}
 
 }

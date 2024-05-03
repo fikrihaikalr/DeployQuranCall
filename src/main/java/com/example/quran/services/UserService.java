@@ -1,6 +1,7 @@
 package com.example.quran.services;
 
 import com.example.quran.data.RoleData;
+import com.example.quran.dto.ChangePassRequest;
 import com.example.quran.dto.ChangePasswordRequest;
 import com.example.quran.model.ERole;
 import com.example.quran.model.Role;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -23,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.*;
@@ -223,15 +227,36 @@ public class UserService {
 //        usersRepository.save(user);
 //    }
 
-    public void changePassword(String email, String oldPassword, String newPassword) {
-        Users user = usersRepository.findByEmail(email)
-                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));;
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            new MessageResponse(true, "Invalid Password");
-        }
+//    public void changePassword(String email, String oldPassword, String newPassword) {
+//        Users user = usersRepository.findByEmail(email)
+//                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));;
+//        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+//            new MessageResponse(true, "Invalid Password");
+//        }
+//
+//        String encodedNewPassword = passwordEncoder.encode(newPassword);
+//        user.setPassword(encodedNewPassword);
+//        usersRepository.save(user);
+//    }
 
-        String encodedNewPassword = passwordEncoder.encode(newPassword);
-        user.setPassword(encodedNewPassword);
+
+    private void validatePasswords(ChangePassRequest request, Users user) {
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            throw new IllegalStateException("Wrong password");
+        }
+        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
+            throw new IllegalStateException("Password are not the same");
+        }
+    }
+
+    public void changePasswordPrincipal(ChangePassRequest request, Principal connectedUser) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Users user = (Users) authentication.getPrincipal();
+
+        validatePasswords(request, user);
+
+        String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
+        user.setPassword(newEncodedPassword);
         usersRepository.save(user);
     }
 
