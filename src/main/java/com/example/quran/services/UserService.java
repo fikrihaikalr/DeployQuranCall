@@ -198,30 +198,30 @@ public class UserService {
         return false;
     }
 
-    public void changePasswordUser(ChangePasswordRequest changePasswordDTO) {
-        validationService.validate(changePasswordDTO);
-        // Cari pengguna berdasarkan username
-        Users user = usersRepository.findByEmail1(changePasswordDTO.getEmail());
-
-        // Periksa apakah pengguna ditemukan
-        if (user == null) {
-            new MessageResponse(true, "User not found");
-        }
-
-        // Periksa apakah kata sandi lama sesuai
-        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
-            new MessageResponse(true, "Incorrect old password");
-        }
-
-        // Enkripsi kata sandi baru
-        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
-
-        // Tetapkan kata sandi baru yang terenkripsi ke pengguna
-        user.setPassword(encodedNewPassword);
-
-        // Simpan perubahan ke dalam database
-        usersRepository.save(user);
-    }
+//    public void changePasswordUser(ChangePasswordRequest changePasswordDTO) {
+//        validationService.validate(changePasswordDTO);
+//        // Cari pengguna berdasarkan username
+//        Users user = usersRepository.findByEmail1(changePasswordDTO.getEmail());
+//
+//        // Periksa apakah pengguna ditemukan
+//        if (user == null) {
+//            new MessageResponse(true, "User not found");
+//        }
+//
+//        // Periksa apakah kata sandi lama sesuai
+//        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
+//            new MessageResponse(true, "Incorrect old password");
+//        }
+//
+//        // Enkripsi kata sandi baru
+//        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+//
+//        // Tetapkan kata sandi baru yang terenkripsi ke pengguna
+//        user.setPassword(encodedNewPassword);
+//
+//        // Simpan perubahan ke dalam database
+//        usersRepository.save(user);
+//    }
 
     public void changePassword(String username, String oldPassword, String newPassword) {
         Users user = usersRepository.findByUsername(username);
