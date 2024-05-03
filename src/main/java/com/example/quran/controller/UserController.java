@@ -110,11 +110,12 @@ public class UserController {
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
     try {
-        userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
-        return ResponseEntity.ok().build();
+        MessageResponse response = userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok(response);
     } catch (Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
+
 
 }

@@ -227,16 +227,18 @@ public class UserService {
 //        usersRepository.save(user);
 //    }
 
-    public void changePassword(String email, String oldPassword, String newPassword) {
+    public MessageResponse changePassword(String email, String oldPassword, String newPassword) {
         Users user = usersRepository.findByEmail(email)
-                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));;
+                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            new MessageResponse(true, "Invalid Password");
+            throw new IllegalArgumentException("Invalid Password");
         }
 
         String encodedNewPassword = passwordEncoder.encode(newPassword);
         user.setPassword(encodedNewPassword);
         usersRepository.save(user);
+
+        return new MessageResponse(true, "Password changed successfully");
     }
 
 
