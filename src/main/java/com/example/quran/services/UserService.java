@@ -254,6 +254,7 @@ public class UserService {
         return true; // Perubahan password berhasil
     }
 
+    @Transactional
     public void changePasswordUser(ChangePasswordRequest changePasswordDTO) {
         validationService.validate(changePasswordDTO);
 //        MessageResponse messageResponse;
