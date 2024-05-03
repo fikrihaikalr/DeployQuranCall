@@ -227,40 +227,17 @@ public class UserService {
 //        usersRepository.save(user);
 //    }
 
-//    public void changePassword(String email, String oldPassword, String newPassword) {
-//        Users user = usersRepository.findByEmail(email)
-//                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));;
-//        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-//            new MessageResponse(true, "Invalid Password");
-//        }
-//
-//        String encodedNewPassword = passwordEncoder.encode(newPassword);
-//        user.setPassword(encodedNewPassword);
-//        usersRepository.save(user);
-//    }
-
-
-    private void validatePasswords(ChangePassRequest request, Users user) {
-        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
-            throw new IllegalStateException("Wrong password");
+    public void changePassword(String email, String oldPassword, String newPassword) {
+        Users user = usersRepository.findByEmail(email)
+                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));;
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            new MessageResponse(true, "Invalid Password");
         }
-        if (!request.getNewPassword().equals(request.getConfirmationPassword())) {
-            throw new IllegalStateException("Password are not the same");
-        }
+
+        String encodedNewPassword = passwordEncoder.encode(newPassword);
+        user.setPassword(encodedNewPassword);
+        usersRepository.save(user);
     }
 
-    public boolean changePassword(Long userId, String newPassword) {
-        Optional<Users> userOptional = usersRepository.findById(userId);
-
-        if (userOptional.isPresent()) {
-            Users user = userOptional.get();
-            // Lakukan validasi lainnya jika diperlukan
-            user.setPassword(newPassword);
-            usersRepository.save(user);
-            return true;
-        } else {
-            return false;
-        }
-    }
 
 }

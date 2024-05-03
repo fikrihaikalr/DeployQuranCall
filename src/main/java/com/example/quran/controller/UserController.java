@@ -107,25 +107,14 @@ public class UserController {
 //        userService.changePasswordUser(changePasswordDTO);
 //        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
 //    }
-//    @PostMapping("/change-password")
-//    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
-//    try {
-//        userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
-//        return ResponseEntity.ok().build();
-//    } catch (Exception e) {
-//        return ResponseEntity.badRequest().body(e.getMessage());
-//    }
-//}
-
-    @PutMapping("/{userId}/change-password")
-    public ResponseEntity<String> changePassword(@PathVariable("userId") Long userId, @RequestBody String newPassword) {
-        boolean passwordChanged = userService.changePassword(userId, newPassword);
-
-        if (passwordChanged) {
-            return ResponseEntity.ok("Password updated successfully!");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @PostMapping("/change-password")
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
+    try {
+        userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok().build();
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body(e.getMessage());
     }
+}
 
 }
