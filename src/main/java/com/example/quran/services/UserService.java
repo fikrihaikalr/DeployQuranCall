@@ -249,15 +249,18 @@ public class UserService {
         }
     }
 
-    public void changePasswordPrincipal(ChangePassRequest request, Principal connectedUser) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Users user = (Users) authentication.getPrincipal();
+    public boolean changePassword(Long userId, String newPassword) {
+        Optional<Users> userOptional = usersRepository.findById(userId);
 
-        validatePasswords(request, user);
-
-        String newEncodedPassword = passwordEncoder.encode(request.getNewPassword());
-        user.setPassword(newEncodedPassword);
-        usersRepository.save(user);
+        if (userOptional.isPresent()) {
+            Users user = userOptional.get();
+            // Lakukan validasi lainnya jika diperlukan
+            user.setPassword(newPassword);
+            usersRepository.save(user);
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

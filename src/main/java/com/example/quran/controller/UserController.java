@@ -117,13 +117,14 @@ public class UserController {
 //    }
 //}
 
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePassRequest request, Principal principal) {
-        try {
-            userService.changePasswordPrincipal(request, principal);
-            return ResponseEntity.ok().build();
-        } catch (InvalidPasswordException | PasswordMismatchException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+    @PutMapping("/{userId}/change-password")
+    public ResponseEntity<String> changePassword(@PathVariable("userId") Long userId, @RequestBody String newPassword) {
+        boolean passwordChanged = userService.changePassword(userId, newPassword);
+
+        if (passwordChanged) {
+            return ResponseEntity.ok("Password updated successfully!");
+        } else {
+            return ResponseEntity.notFound().build();
         }
     }
 
