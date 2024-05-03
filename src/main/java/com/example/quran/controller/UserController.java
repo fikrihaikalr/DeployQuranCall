@@ -109,9 +109,13 @@ public class UserController {
 //    }
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
-    try {
-        MessageResponse response = userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
-        return ResponseEntity.ok(response);
+        try {
+            if (request.getNewPassword() == null) {
+            throw new IllegalArgumentException("New password cannot be null");
+            }
+
+        userService.changePassword(principal.getName(), request.getOldPassword(), request.getNewPassword());
+        return ResponseEntity.ok().build();
     } catch (Exception e) {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
