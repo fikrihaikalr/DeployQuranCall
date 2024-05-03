@@ -60,7 +60,7 @@ public class WebSecurityConfig {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
                 .authorizeRequests().antMatchers("/api/signin").permitAll()
                 .antMatchers("/api/signup").permitAll()
-                .antMatchers("/api/change-password").permitAll()
+                .antMatchers("/api/change-password").authenticated()
 //                .antMatchers("/api/signup", "/api/materi","/api/materi/{materiId}","/api/submateri/{subMateriId}").permitAll()
 //                .antMatchers("/api/surah", "/api/surah/{surahId}", "/api/surahName", "/api/guru","/api/guru", "/api/guru/{userId}","/api/user/{userId}", "/api/getEmailUser", "/api/{id}/uploadPhoto", "/api/{id}/changePhoto", "/api/change-password").permitAll()
 //                .antMatchers("/api/ayah/{surahNumber}", "/api/doa").permitAll()
