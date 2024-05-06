@@ -13,20 +13,17 @@ import java.util.Set;
 
 @Data
 public class SignupRequest {
-    @NotBlank
+    @NotBlank(message = "Username kosong")
     @Size(min = 3, max = 20)
-    @NotNull(message = "Username kosong")
     private String username;
 
-    @NotBlank
+    @NotBlank(message = "Email Kosong")
     @Size(max = 50)
     @Email(message = "invalid, you must create email")
-    @NotNull(message = "Email Kosong")
     private String email;
 
-    @NotBlank
+    @NotBlank(message = "Masukan Password")
     @Size(min = 8, max = 40, message = "Minimal 8 Karakter!")
-    @NotNull
     private String password;
     private Set<String> role;
 }
