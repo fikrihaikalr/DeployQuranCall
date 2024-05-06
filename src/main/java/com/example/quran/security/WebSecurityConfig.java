@@ -62,9 +62,6 @@ public class WebSecurityConfig {
                 .authorizeRequests().antMatchers("/api/signin").permitAll()
                 .antMatchers("/api/signup").permitAll()
                 .antMatchers("/api/change-password").authenticated()
-//                .antMatchers("/api/signup", "/api/materi","/api/materi/{materiId}","/api/submateri/{subMateriId}").permitAll()
-//                .antMatchers("/api/surah", "/api/surah/{surahId}", "/api/surahName", "/api/guru","/api/guru", "/api/guru/{userId}","/api/user/{userId}", "/api/getEmailUser", "/api/{id}/uploadPhoto", "/api/{id}/changePhoto", "/api/change-password").permitAll()
-//                .antMatchers("/api/ayah/{surahNumber}", "/api/doa").permitAll()
                 .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .anyRequest().authenticated();
 
@@ -74,29 +71,5 @@ public class WebSecurityConfig {
 
         return http.build();
     }
-
-//    @Bean
-//    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-//        http
-//                .csrf(AbstractHttpConfigurer::disable)
-//                .authorizeHttpRequests(req ->
-//                                req.requestMatchers(
-//                                        "/v3/api-docs/**",
-//                                                "/swagger-ui/**",
-//                                                "/swagger-ui.html",
-//                                                "/api/auth/**",
-//                                                "http://localhost:8080/swagger-ui/index.html",
-//                                                "/api/**").permitAll()
-//                        .anyRequest()
-//                        .authenticated()
-//                )
-////                .formLogin(login -> login.loginPage("/login"))
-//                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .exceptionHandling(exception -> exception.authenticationEntryPoint(unauthorizedHandler))
-//                .authenticationProvider(authenticationProvider())
-//                .addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-//
-//        return http.build();
-//    }
 
 }

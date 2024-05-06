@@ -242,7 +242,7 @@ public class UserService {
 //    }
 
     public void changePassword(Users users, String currentPassword, String newPassword) {
-        UsernamePasswordAuthenticationToken currentAuth = new UsernamePasswordAuthenticationToken(users.getUsername(), currentPassword);
+        UsernamePasswordAuthenticationToken currentAuth = new UsernamePasswordAuthenticationToken(users.getEmail(), currentPassword);
         authenticationManager.authenticate(currentAuth);
 
         users.setPassword(passwordEncoder.encode(newPassword));
