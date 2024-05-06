@@ -11,6 +11,8 @@ import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -107,12 +109,26 @@ public class UserController {
 //        userService.changePasswordUser(changePasswordDTO);
 //        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
 //    }
+//    @PostMapping("/change-password")
+//    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
+//        Users users = usersRepository.findByEmail(principal.getName()).orElseThrow();
+//        userService.changePassword(users, request.getOldPassword(), request.getNewPassword());
+//        return ResponseEntity.ok("OK");
+//}
+
     @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
-        Users users = usersRepository.findByEmail(principal.getName()).orElseThrow();
-        userService.changePassword(users, request.getOldPassword(), request.getNewPassword());
-        return ResponseEntity.ok("OK");
-}
+    public ResponseEntity<?> changePassword(Principal principal, @RequestBody ChangePasswordRequest changePasswordDTO) {
+        try {
+            userService.changePasswordUser(principal, changePasswordDTO);
+            return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
+        } catch (AccessDeniedException ex) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(true, ex.getMessage()));
+        } catch (BadCredentialsException ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse(true, ex.getMessage()));
+        }
+    }
 
 
 }

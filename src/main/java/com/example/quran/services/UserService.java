@@ -13,10 +13,13 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -241,12 +244,40 @@ public class UserService {
 //        usersRepository.save(users);
 //    }
 
-    public void changePassword(Users users, String currentPassword, String newPassword) {
-        UsernamePasswordAuthenticationToken currentAuth = new UsernamePasswordAuthenticationToken(users.getEmail(), currentPassword);
-        authenticationManager.authenticate(currentAuth);
+//    public void changePassword(Users users, String currentPassword, String newPassword) {
+//        UsernamePasswordAuthenticationToken currentAuth = new UsernamePasswordAuthenticationToken(users.getEmail(), currentPassword);
+//        authenticationManager.authenticate(currentAuth);
+//
+//        users.setPassword(passwordEncoder.encode(newPassword));
+//        usersRepository.save(users);
+//    }
 
-        users.setPassword(passwordEncoder.encode(newPassword));
-        usersRepository.save(users);
+    public void changePasswordUser(Principal principal, ChangePasswordRequest changePasswordDTO) {
+        validationService.validate(changePasswordDTO);
+
+        // Dapatkan pengguna saat ini dari Principal
+        String currentUserEmail = principal.getName();
+        Users currentUser = usersRepository.findByEmail(currentUserEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        // Periksa apakah pengguna saat ini adalah pengguna yang dimaksud
+        if (!currentUser.getEmail().equals(changePasswordDTO.getEmail())) {
+            throw new AccessDeniedException("Access denied");
+        }
+
+        // Periksa apakah kata sandi lama sesuai
+        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), currentUser.getPassword())) {
+            throw new BadCredentialsException("Incorrect old password");
+        }
+
+        // Enkripsi kata sandi baru
+        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+
+        // Tetapkan kata sandi baru yang terenkripsi ke pengguna
+        currentUser.setPassword(encodedNewPassword);
+
+        // Simpan perubahan ke dalam database
+        usersRepository.save(currentUser);
     }
 
 
