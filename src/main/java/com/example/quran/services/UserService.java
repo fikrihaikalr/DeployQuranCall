@@ -13,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -47,6 +49,9 @@ public class UserService {
 
     @Autowired
     ValidationService validationService;
+
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
 
     public Users getUserById(Long id){
@@ -227,27 +232,19 @@ public class UserService {
 //        usersRepository.save(user);
 //    }
 
-//    public void changePassword(String email, String oldPassword, String newPassword) {
-//        Users user = usersRepository.findByEmail(email)
-//                .orElseThrow(() -> new ExceptionUsername("User not found with username: " + email));
-//
-//        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-//            throw new IllegalArgumentException("Invalid Password");
+
+//    public void changePassword(Users users, String currentPassword, String newPassword){
+//        if(currentPassword == null || !passwordEncoder.matches(currentPassword, users.getPassword())){
+//            throw new RuntimeException("Invalid");
 //        }
-//
-//        if (newPassword == null) {
-//            throw new IllegalArgumentException("New password cannot be null");
-//        }
-//
-//        String encodedNewPassword = passwordEncoder.encode(newPassword);
-//        user.setPassword(encodedNewPassword);
-//        usersRepository.save(user);
+//        users.setPassword(passwordEncoder.encode(newPassword));
+//        usersRepository.save(users);
 //    }
 
-    public void changePassword(Users users, String currentPassword, String newPassword){
-        if(currentPassword == null || !passwordEncoder.matches(currentPassword, users.getPassword())){
-            throw new RuntimeException("Invalid");
-        }
+    public void changePassword(Users users, String currentPassword, String newPassword) {
+        UsernamePasswordAuthenticationToken currentAuth = new UsernamePasswordAuthenticationToken(users.getUsername(), currentPassword);
+        authenticationManager.authenticate(currentAuth);
+
         users.setPassword(passwordEncoder.encode(newPassword));
         usersRepository.save(users);
     }
