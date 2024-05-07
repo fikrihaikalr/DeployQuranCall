@@ -96,13 +96,13 @@ public class UserController {
     @PostMapping("/{id}/uploadPhoto")
     public ResponseEntity<?> uploadPhoto(@PathVariable Long id, @RequestParam MultipartFile file) throws Exception {
         userService.uploadPhoto(id, file);
-        return ResponseEntity.ok("Photo Upload Succesfully");
+        return ResponseEntity.ok(new MessageResponse(false, "Berhasil"));
     }
 
     @PutMapping("/{id}/changePhoto")
     public ResponseEntity<?> changePhoto(@PathVariable Long id, @RequestParam MultipartFile file) throws Exception {
         userService.changePhoto(id, file);
-        return ResponseEntity.ok("Photo Changed Successfully");
+        return ResponseEntity.ok(new MessageResponse(false, "Photo Changed Successfully"));
     }
 //    @PostMapping("/change-password")
 //    public ResponseEntity<String> changePassword(@Validated @RequestBody ChangePasswordRequest changePasswordDTO) {
