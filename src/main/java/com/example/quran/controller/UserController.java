@@ -118,15 +118,9 @@ public class UserController {
 
     @PostMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, Principal principal) {
-        try {
-            userService.changePassword(changePasswordRequest, principal);
-            return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
-        } catch (BadCredentialsException ex) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, ex.getMessage()));
-        } catch (Exception ex) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new MessageResponse(true, ex.getMessage()));
-        }
+        userService.changePassword(changePasswordRequest, principal);
+        return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
+
+
     }
-
-
 }

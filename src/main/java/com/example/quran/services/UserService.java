@@ -254,9 +254,6 @@ public class UserService {
 //    }
 
     public void changePassword(ChangePasswordRequest changePasswordRequest, Principal principal) {
-        if (changePasswordRequest.getRawPassword() == null) {
-            throw new IllegalArgumentException("Password cannot be null");
-        }
         // Dapatkan pengguna saat ini dari Principal
         String currentUserEmail = principal.getName();
         Users currentUser = usersRepository.findByEmail(currentUserEmail)
