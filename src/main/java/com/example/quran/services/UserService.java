@@ -259,7 +259,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         // Validasi password lama
-        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), currentUser.getPassword())) {
+        if (!passwordEncoder.matches(changePasswordRequest.getRawPassword(), currentUser.getPassword())) {
             throw new BadCredentialsException("Incorrect old password");
         }
 
