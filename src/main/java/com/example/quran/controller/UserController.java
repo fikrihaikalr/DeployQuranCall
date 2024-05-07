@@ -117,12 +117,10 @@ public class UserController {
 //}
 
     @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(Principal principal, @RequestBody ChangePasswordRequest changePasswordDTO) {
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, Principal principal) {
         try {
-            userService.changePasswordUser(principal, changePasswordDTO);
+            userService.changePassword(changePasswordRequest, principal);
             return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
-        } catch (AccessDeniedException ex) {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(new MessageResponse(true, ex.getMessage()));
         } catch (BadCredentialsException ex) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, ex.getMessage()));
         } catch (Exception ex) {

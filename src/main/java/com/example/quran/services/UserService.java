@@ -252,28 +252,24 @@ public class UserService {
 //        usersRepository.save(users);
 //    }
 
-    public void changePasswordUser(Principal principal, ChangePasswordRequest changePasswordDTO) {
-        validationService.validate(changePasswordDTO);
-
+    public void changePassword(ChangePasswordRequest changePasswordRequest, Principal principal) {
         // Dapatkan pengguna saat ini dari Principal
         String currentUserEmail = principal.getName();
         Users currentUser = usersRepository.findByEmail(currentUserEmail)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Periksa apakah pengguna saat ini adalah pengguna yang dimaksud
-        if (!currentUser.getEmail().equals(changePasswordDTO.getEmail())) {
-            throw new AccessDeniedException("Access denied");
-        }
-
-        // Periksa apakah kata sandi lama sesuai
-        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), currentUser.getPassword())) {
+        // Validasi password lama
+        if (!passwordEncoder.matches(changePasswordRequest.getOldPassword(), currentUser.getPassword())) {
             throw new BadCredentialsException("Incorrect old password");
         }
 
-        // Enkripsi kata sandi baru
-        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
+        // Validasi password baru dan konfirmasi password
+        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
+            throw new IllegalArgumentException("New password and confirm password do not match");
+        }
 
-        // Tetapkan kata sandi baru yang terenkripsi ke pengguna
+        // Tetapkan password baru yang terenkripsi ke pengguna
+        String encodedNewPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
         currentUser.setPassword(encodedNewPassword);
 
         // Simpan perubahan ke dalam database
