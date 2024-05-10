@@ -116,7 +116,7 @@ public class UserController {
 //        return ResponseEntity.ok("OK");
 //}
 
-    @PostMapping("/change-password/{userId}")
+    @PutMapping("/change-password/{userId}")
     public ResponseEntity<?> changePasswordById(@PathVariable Long userId, @RequestBody ChangePasswordRequest changePasswordRequest) {
         userService.changePasswordById(userId, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
         return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
