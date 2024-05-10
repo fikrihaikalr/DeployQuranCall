@@ -12,6 +12,8 @@ import com.example.quran.response.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -253,28 +255,41 @@ public class UserService {
 //        usersRepository.save(users);
 //    }
 
-    public void changePassword(ChangePasswordRequest changePasswordRequest, Principal principal) {
-        // Dapatkan pengguna saat ini dari Principal
-        String currentUserEmail = principal.getName();
-        Users currentUser = usersRepository.findByEmail(currentUserEmail)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//    public void changePassword(ChangePasswordRequest changePasswordRequest, Principal principal) {
+//        // Dapatkan pengguna saat ini dari Principal
+//        String currentUserEmail = principal.getName();
+//        Users currentUser = usersRepository.findByEmail(currentUserEmail)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        // Validasi password lama
+//        if (!passwordEncoder.matches(changePasswordRequest.getRawPassword(), currentUser.getPassword())) {
+//            throw new BadCredentialsException("Incorrect old password");
+//        }
+//
+//        // Validasi password baru dan konfirmasi password
+//        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
+//            throw new IllegalArgumentException("New password and confirm password do not match");
+//        }
+//
+//        // Tetapkan password baru yang terenkripsi ke pengguna
+//        String encodedNewPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
+//        currentUser.setPassword(encodedNewPassword);
+//
+//        // Simpan perubahan ke dalam database
+//        usersRepository.save(currentUser);
+//    }
 
-        // Validasi password lama
-        if (!passwordEncoder.matches(changePasswordRequest.getRawPassword(), currentUser.getPassword())) {
-            throw new BadCredentialsException("Incorrect old password");
+    public ResponseEntity<?> changePassword(String userEmail, String oldPassword, String newPassword) {
+        Users loginUser = usersRepository.findByEmail1(userEmail);
+
+        boolean passwordMatches = passwordEncoder.matches(oldPassword, loginUser.getPassword());
+        if (passwordMatches) {
+            loginUser.setPassword(passwordEncoder.encode(newPassword));
+            usersRepository.save(loginUser);
+            return ResponseEntity.ok(new MessageResponse(false, "Change Password Success"));
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, "Old password is incorrect."));
         }
-
-        // Validasi password baru dan konfirmasi password
-        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
-            throw new IllegalArgumentException("New password and confirm password do not match");
-        }
-
-        // Tetapkan password baru yang terenkripsi ke pengguna
-        String encodedNewPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
-        currentUser.setPassword(encodedNewPassword);
-
-        // Simpan perubahan ke dalam database
-        usersRepository.save(currentUser);
     }
 
 
