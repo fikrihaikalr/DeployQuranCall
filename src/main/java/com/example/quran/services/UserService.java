@@ -292,23 +292,18 @@ public class UserService {
 //        }
 //    }
 
-    public ResponseEntity<?> changePasswordById(Long userId, String oldPassword, String newPassword) {
-        Optional<Users> userOptional = usersRepository.findById(userId);
+    public void changePassword(Long id, String oldPassword, String newPassword) throws InvalidPasswordException {
+        Users user = usersRepository.findById(id)
+                .orElseThrow(() -> new ExceptionUsername("a"));
 
-        if (userOptional.isPresent()) {
-            Users user = userOptional.get();
-            boolean passwordMatches = passwordEncoder.matches(oldPassword, user.getPassword());
-
-            if (passwordMatches) {
-                user.setPassword(passwordEncoder.encode(newPassword));
-                usersRepository.save(user);
-                return ResponseEntity.ok(new MessageResponse(false, "Change Password Success"));
-            } else {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, "Old password is incorrect."));
-            }
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(true, "User not found."));
+        // Validate old password
+        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
+            throw new InvalidPasswordException("Old password is incorrect.");
         }
+
+        // Update password and save user
+        user.setPassword(passwordEncoder.encode(newPassword));
+        usersRepository.save(user);
     }
 
 

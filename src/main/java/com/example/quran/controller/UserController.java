@@ -118,11 +118,15 @@ public class UserController {
 //}
 
     @PutMapping("/change-password/{userId}")
-    public ResponseEntity<?> changePasswordById(@PathVariable Long userId, @RequestBody Map<String, String> request) {
-        String oldPassword = request.get("oldPassword");
-        String newPassword = request.get("newPassword");
-        userService.changePasswordById(userId, oldPassword, newPassword);
-        return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
+    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
+        try {
+            userService.changePassword(request.getId(), request.getOldPassword(), request.getNewPassword());
+            return ResponseEntity.ok().build();
+        } catch (ExceptionUsername e) {
+            return ResponseEntity.notFound().build();
+        } catch (InvalidPasswordException e) {
+            return ResponseEntity.badRequest().build();
+        }
     }
 
 //    @PostMapping("/change-password")
