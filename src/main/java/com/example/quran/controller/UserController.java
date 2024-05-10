@@ -117,7 +117,7 @@ public class UserController {
 //        return ResponseEntity.ok("OK");
 //}
 
-    @PutMapping("/change-password/{userId}")
+    @PutMapping("/change-password")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request) {
         try {
             userService.changePassword(request.getId(), request.getOldPassword(), request.getNewPassword());
