@@ -19,6 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -117,8 +118,10 @@ public class UserController {
 //}
 
     @PutMapping("/change-password/{userId}")
-    public ResponseEntity<?> changePasswordById(@PathVariable Long userId, @RequestBody ChangePasswordRequest changePasswordRequest) {
-        userService.changePasswordById(userId, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+    public ResponseEntity<?> changePasswordById(@PathVariable Long userId, @RequestBody Map<String, String> request) {
+        String oldPassword = request.get("oldPassword");
+        String newPassword = request.get("newPassword");
+        userService.changePasswordById(userId, oldPassword, newPassword);
         return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
     }
 
