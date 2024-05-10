@@ -294,12 +294,15 @@ public class UserService {
 
     public void changePassword(Long id, String oldPassword, String newPassword) throws InvalidPasswordException {
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new ExceptionUsername("a"));
+                .orElseThrow(() -> new ExceptionUsername(""));
 
         // Validate old password
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new InvalidPasswordException("Old password is incorrect.");
         }
+
+        // Implement new password validation logic (optional)
+
 
         // Update password and save user
         user.setPassword(passwordEncoder.encode(newPassword));
