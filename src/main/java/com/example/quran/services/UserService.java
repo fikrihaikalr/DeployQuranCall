@@ -293,6 +293,7 @@ public class UserService {
 //    }
 
     public void changePassword(Long id, String oldPassword, String newPassword) throws InvalidPasswordException {
+        validationService.validate(oldPassword);
         Users user = usersRepository.findById(id)
                 .orElseThrow(() -> new ExceptionUsername(""));
 
