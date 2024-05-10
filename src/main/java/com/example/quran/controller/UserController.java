@@ -116,13 +116,10 @@ public class UserController {
 //        return ResponseEntity.ok("OK");
 //}
 
-    @PostMapping("/change-password")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest, Principal principal) {
-        String email = principal.getName();
-        userService.changePassword(email, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
+    @PostMapping("/change-password/{userId}")
+    public ResponseEntity<?> changePasswordById(@PathVariable Long userId, @RequestBody ChangePasswordRequest changePasswordRequest) {
+        userService.changePasswordById(userId, changePasswordRequest.getOldPassword(), changePasswordRequest.getNewPassword());
         return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
-
-
     }
 
 //    @PostMapping("/change-password")

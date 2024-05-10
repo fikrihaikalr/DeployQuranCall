@@ -279,16 +279,35 @@ public class UserService {
 //        usersRepository.save(currentUser);
 //    }
 
-    public ResponseEntity<?> changePassword(String userEmail, String oldPassword, String newPassword) {
-        Users loginUser = usersRepository.findByEmail1(userEmail);
+//    public ResponseEntity<?> changePassword(String userEmail, String oldPassword, String newPassword) {
+//        Users loginUser = usersRepository.findByEmail1(userEmail);
+//
+//        boolean passwordMatches = passwordEncoder.matches(oldPassword, loginUser.getPassword());
+//        if (passwordMatches) {
+//            loginUser.setPassword(passwordEncoder.encode(newPassword));
+//            usersRepository.save(loginUser);
+//            return ResponseEntity.ok(new MessageResponse(false, "Change Password Success"));
+//        } else {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, "Old password is incorrect."));
+//        }
+//    }
 
-        boolean passwordMatches = passwordEncoder.matches(oldPassword, loginUser.getPassword());
-        if (passwordMatches) {
-            loginUser.setPassword(passwordEncoder.encode(newPassword));
-            usersRepository.save(loginUser);
-            return ResponseEntity.ok(new MessageResponse(false, "Change Password Success"));
+    public ResponseEntity<?> changePasswordById(Long userId, String oldPassword, String newPassword) {
+        Optional<Users> userOptional = usersRepository.findById(userId);
+
+        if (userOptional.isPresent()) {
+            Users user = userOptional.get();
+            boolean passwordMatches = passwordEncoder.matches(oldPassword, user.getPassword());
+
+            if (passwordMatches) {
+                user.setPassword(passwordEncoder.encode(newPassword));
+                usersRepository.save(user);
+                return ResponseEntity.ok(new MessageResponse(false, "Change Password Success"));
+            } else {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, "Old password is incorrect."));
+            }
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, "Old password is incorrect."));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new MessageResponse(true, "User not found."));
         }
     }
 
