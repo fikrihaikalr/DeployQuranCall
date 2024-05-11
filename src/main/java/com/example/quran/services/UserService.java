@@ -297,7 +297,7 @@ public class UserService {
             throw new IllegalArgumentException("Old and new passwords cannot be null.");
         }
         Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new ExceptionUsername(""));
+                .orElseThrow(() -> new ExceptionUsername("Bad Request"));
 
         // Validate old password
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
