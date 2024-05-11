@@ -292,23 +292,14 @@ public class UserService {
 //        }
 //    }
 
-    public void changePassword(Long id, String oldPassword, String newPassword) throws InvalidPasswordException {
-        Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new ExceptionUsername("Bad Request"));
-        if (oldPassword == null || newPassword == null) {
-            throw new IllegalArgumentException("Old and new passwords cannot be null.");
+    public void changePassword(Long userId, String currentPassword, String newPassword) {
+        Users user = usersRepository.findById(userId)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+            throw new InvalidPasswordException("Current password is incorrect");
         }
 
-
-        // Validate old password
-        if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
-            throw new InvalidPasswordException("Old password is incorrect.");
-        }
-
-        // Implement new password validation logic (optional)
-
-
-        // Update password and save user
         user.setPassword(passwordEncoder.encode(newPassword));
         usersRepository.save(user);
     }

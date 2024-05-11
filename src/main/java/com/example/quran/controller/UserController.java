@@ -119,20 +119,12 @@ public class UserController {
 //        return ResponseEntity.ok("OK");
 //}
 
-    @PatchMapping("/change-password/{id}")
-    public ResponseEntity<?> changePassword(@PathVariable Long id, @RequestBody @Valid ChangePasswordRequest request) {
-        if (request.getOldPassword() == null || request.getNewPassword() == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        log.info("recievbed" + id);
-
-        log.info("Received JSON data: {}", request);
-
+    @PutMapping("/{userId}/password")
+    public ResponseEntity<String> changePassword(@PathVariable Long userId,
+                                                 @RequestBody ChangePasswordRequest request) {
         try {
-            userService.changePassword(id, request.getOldPassword(), request.getNewPassword());
-            return ResponseEntity.ok().build();
-        } catch (ExceptionUsername e) {
-            return ResponseEntity.notFound().build();
+            userService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
+            return ResponseEntity.ok("Password changed successfully");
         } catch (InvalidPasswordException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
