@@ -293,11 +293,11 @@ public class UserService {
 //    }
 
     public void changePassword(Long id, String oldPassword, String newPassword) throws InvalidPasswordException {
+        Users user = usersRepository.findById(id)
+                .orElseThrow(() -> new ExceptionUsername("Bad Request"));
         if (oldPassword == null || newPassword == null) {
             throw new IllegalArgumentException("Old and new passwords cannot be null.");
         }
-        Users user = usersRepository.findById(id)
-                .orElseThrow(() -> new ExceptionUsername("Bad Request"));
 
 
         // Validate old password
