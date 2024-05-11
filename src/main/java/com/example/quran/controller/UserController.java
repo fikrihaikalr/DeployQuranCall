@@ -6,14 +6,10 @@ import com.example.quran.model.Users;
 import com.example.quran.repository.UsersRepository;
 import com.example.quran.response.*;
 import com.example.quran.services.UserService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -121,7 +117,7 @@ public class UserController {
 
     @PutMapping("/{userId}/password")
     public ResponseEntity<String> changePassword(@PathVariable Long userId,
-                                                 @RequestBody ChangePasswordRequest request) {
+                                                 @RequestBody @Validated ChangePasswordRequest request) {
         try {
             userService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
             return ResponseEntity.ok("Password changed successfully");
