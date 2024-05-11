@@ -103,32 +103,15 @@ public class UserController {
         userService.changePhoto(id, file);
         return ResponseEntity.ok(new MessageResponse(false, "Photo Changed Successfully"));
     }
-//    @PostMapping("/change-password")
-//    public ResponseEntity<String> changePassword(@Validated @RequestBody ChangePasswordRequest changePasswordDTO) {
-//        userService.changePasswordUser(changePasswordDTO);
-//        return ResponseEntity.status(HttpStatus.OK).body("Password changed successfully");
-//    }
-//    @PostMapping("/change-password")
-//    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordRequest request, Principal principal) {
-//        Users users = usersRepository.findByEmail(principal.getName()).orElseThrow();
-//        userService.changePassword(users, request.getOldPassword(), request.getNewPassword());
-//        return ResponseEntity.ok("OK");
-//}
 
     @PutMapping("/{userId}/password")
-    public ResponseEntity<String> changePassword(@PathVariable Long userId,
+    public ResponseEntity<?> changePassword(@PathVariable Long userId,
                                                  @RequestBody @Validated ChangePasswordRequest request) {
         try {
             userService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
-            return ResponseEntity.ok("Password changed successfully");
+            return ResponseEntity.ok(new MessageResponse(false, "Password Changes Succesfully"));
         } catch (InvalidPasswordException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-//    @PostMapping("/change-password")
-//    public ResponseEntity<?> changePassword(Principal p, @RequestParam("oldPass") String oldPass, @RequestParam("newPassword") String newPass) {
-//        String email = p.getName();
-//        return userService.changePassword(email, oldPass, newPass);
-//    }
 }

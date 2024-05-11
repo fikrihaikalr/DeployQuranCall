@@ -297,7 +297,7 @@ public class UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new InvalidPasswordException("Current password is incorrect");
+            new MessageResponse(true, "Password Dont Matches!");
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
