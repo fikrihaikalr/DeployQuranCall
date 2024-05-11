@@ -7,6 +7,7 @@ import com.example.quran.repository.UsersRepository;
 import com.example.quran.response.*;
 import com.example.quran.services.UserService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
+@Slf4j
 public class UserController {
     @Autowired
     UserService userService;
@@ -122,6 +124,9 @@ public class UserController {
         if (request.getOldPassword() == null || request.getNewPassword() == null) {
             return ResponseEntity.badRequest().build();
         }
+        log.info("recievbed" + id);
+
+        log.info("Received JSON data: {}", request);
 
         try {
             userService.changePassword(id, request.getOldPassword(), request.getNewPassword());
