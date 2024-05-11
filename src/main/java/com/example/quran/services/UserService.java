@@ -299,6 +299,7 @@ public class UserService {
         Users user = usersRepository.findById(id)
                 .orElseThrow(() -> new ExceptionUsername("Bad Request"));
 
+
         // Validate old password
         if (!passwordEncoder.matches(oldPassword, user.getPassword())) {
             throw new InvalidPasswordException("Old password is incorrect.");
