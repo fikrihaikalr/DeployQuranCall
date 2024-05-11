@@ -292,17 +292,31 @@ public class UserService {
 //        }
 //    }
 
-    public void changePassword(Long userId, String currentPassword, String newPassword) {
+//    yang bisa
+//    public void changePassword(Long userId, String currentPassword, String newPassword) {
+//        Users user = usersRepository.findById(userId)
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+//            throw new InvalidPasswordException("Current password is incorrect");
+//        }
+//
+//        user.setPassword(passwordEncoder.encode(newPassword));
+//        usersRepository.save(user);
+//    }
+
+    public ResponseEntity<MessageResponse> changePassword(Long userId, String currentPassword, String newPassword) {
         Users user = usersRepository.findById(userId)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
         if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-            throw new InvalidPasswordException("Current password is incorrect");
+            return ResponseEntity.badRequest().body(new MessageResponse(true, "Current password is incorrect"));
         }
 
         user.setPassword(passwordEncoder.encode(newPassword));
         usersRepository.save(user);
-    }
 
+        return ResponseEntity.ok(new MessageResponse(false, "Password changed successfully"));
+    }
 
 }

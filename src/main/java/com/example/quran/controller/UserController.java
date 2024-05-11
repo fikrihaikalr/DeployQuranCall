@@ -104,14 +104,24 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse(false, "Photo Changed Successfully"));
     }
 
+//    @PutMapping("/{userId}/password")
+//    public ResponseEntity<?> changePassword(@PathVariable Long userId,
+//                                                 @RequestBody @Validated ChangePasswordRequest request) {
+//        try {
+//            userService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
+//            return ResponseEntity.ok(new MessageResponse(false, "Password Changes Succesfully"));
+//        } catch (InvalidPasswordException e) {
+//            return ResponseEntity.badRequest().body(e.getMessage());
+//        }
+//    }
+
     @PutMapping("/{userId}/password")
-    public ResponseEntity<?> changePassword(@PathVariable Long userId,
-                                                 @RequestBody @Validated ChangePasswordRequest request) {
+    public ResponseEntity<MessageResponse> changePassword(@PathVariable Long userId,
+                                                          @RequestBody ChangePasswordRequest request) {
         try {
-            userService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
-            return ResponseEntity.ok(new MessageResponse(false, "Password Changes Succesfully"));
+            return userService.changePassword(userId, request.getCurrentPassword(), request.getNewPassword());
         } catch (InvalidPasswordException e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            return ResponseEntity.badRequest().body(new MessageResponse(true, e.getMessage()));
         }
     }
 }
