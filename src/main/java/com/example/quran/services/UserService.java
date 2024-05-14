@@ -63,16 +63,6 @@ public class UserService {
     public Users getUserById(Long id){
         log.info("Get Data User By Id Succses!");
         return usersRepository.findById(id).orElse(null);
-//        Users users = usersRepository.findById(id).orElse(null);
-//        UserDetailsResponse userDetailsResponse = new UserDetailsResponse();
-//        userDetailsResponse.setId(users.getId().toString());
-//        userDetailsResponse.setUsername(users.getUsername());
-//        userDetailsResponse.setEmail(users.getEmail());
-//        userDetailsResponse.setPassword(users.getPassword());
-//        userDetailsResponse.setPhotoPath(users.getPhotoPath());
-//        userDetailsResponse.setRoles(convertSetToList(users.getRoles()));
-
-//        return userDetailsResponse;
 
     }
 
@@ -144,26 +134,6 @@ public class UserService {
         return rolesList;
     }
 
-//    public DetailRoleResponse getTeacherRole(Long userId){
-//        Users teacher = usersRepository.findById(userId).orElse(null);
-//        if (teacher == null) {
-//            return null;
-//        }
-//        DetailRoleResponse teacherDetail = new DetailRoleResponse();
-//        MessageResponse messageResponse = new MessageResponse(false, "Success");
-//        RoleData roleData = new RoleData();
-//        roleData.setId(teacher.getId().toString());
-//        roleData.setUsername(teacher.getUsername());
-//        roleData.setEmail(teacher.getEmail());
-//        roleData.setPhotoPath(teacher.getPhotoPath());
-//        roleData.setRoles(convertSetToList(teacher.getRoles()));
-//        teacherDetail.setMessageResponse(messageResponse);
-//        teacherDetail.setData(roleData);
-//        return teacherDetail;
-//    }
-
-
-
     public Users getUserByEmail(String email){
         return usersRepository.findByEmail1(email);
     }
@@ -176,12 +146,11 @@ public class UserService {
 
         try {
             String uploadDir = "user-photos/" + id;
-            String filePath = uploadDir + "/" + fileName;
             Path storagePath = Paths.get(uploadDir).toAbsolutePath().normalize();
             Files.createDirectories(storagePath);
             Files.copy(file.getInputStream(), storagePath.resolve(fileName), StandardCopyOption.REPLACE_EXISTING);
 
-            users.setPhotoPath(filePath);
+            users.setPhotoPath(fileName);
             usersRepository.save(users);
         }catch (IOException e){
             throw new Exception("Could not store file " + fileName + ". Please try again!", e);
@@ -191,11 +160,6 @@ public class UserService {
     }
     public void changePhoto(Long id, MultipartFile file) throws Exception{
         uploadPhoto(id, file);
-    }
-
-
-    public boolean checkIfValidOldPassword(Users user, String oldPassword) {
-        return passwordEncoder.matches(oldPassword, user.getPassword());
     }
 
     @Scheduled(cron = "0 0 20-21 * * *")
@@ -212,98 +176,6 @@ public class UserService {
         // Jika waktu saat ini bukan dalam rentang waktu maintenance
         return false;
     }
-
-//    public void changePasswordUser(ChangePasswordRequest changePasswordDTO) {
-//        validationService.validate(changePasswordDTO);
-//        // Cari pengguna berdasarkan username
-//        Users user = usersRepository.findByEmail1(changePasswordDTO.getEmail());
-//
-//        // Periksa apakah pengguna ditemukan
-//        if (user == null) {
-//            new MessageResponse(true, "User not found");
-//        }
-//
-//        // Periksa apakah kata sandi lama sesuai
-//        if (!passwordEncoder.matches(changePasswordDTO.getOldPassword(), user.getPassword())) {
-//            new MessageResponse(true, "Incorrect old password");
-//        }
-//
-//        // Enkripsi kata sandi baru
-//        String encodedNewPassword = passwordEncoder.encode(changePasswordDTO.getNewPassword());
-//
-//        // Tetapkan kata sandi baru yang terenkripsi ke pengguna
-//        user.setPassword(encodedNewPassword);
-//
-//        // Simpan perubahan ke dalam database
-//        usersRepository.save(user);
-//    }
-
-
-//    public void changePassword(Users users, String currentPassword, String newPassword){
-//        if(currentPassword == null || !passwordEncoder.matches(currentPassword, users.getPassword())){
-//            throw new RuntimeException("Invalid");
-//        }
-//        users.setPassword(passwordEncoder.encode(newPassword));
-//        usersRepository.save(users);
-//    }
-
-//    public void changePassword(Users users, String currentPassword, String newPassword) {
-//        UsernamePasswordAuthenticationToken currentAuth = new UsernamePasswordAuthenticationToken(users.getEmail(), currentPassword);
-//        authenticationManager.authenticate(currentAuth);
-//
-//        users.setPassword(passwordEncoder.encode(newPassword));
-//        usersRepository.save(users);
-//    }
-
-//    public void changePassword(ChangePasswordRequest changePasswordRequest, Principal principal) {
-//        // Dapatkan pengguna saat ini dari Principal
-//        String currentUserEmail = principal.getName();
-//        Users currentUser = usersRepository.findByEmail(currentUserEmail)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//
-//        // Validasi password lama
-//        if (!passwordEncoder.matches(changePasswordRequest.getRawPassword(), currentUser.getPassword())) {
-//            throw new BadCredentialsException("Incorrect old password");
-//        }
-//
-//        // Validasi password baru dan konfirmasi password
-//        if (!changePasswordRequest.getNewPassword().equals(changePasswordRequest.getConfirmNewPassword())) {
-//            throw new IllegalArgumentException("New password and confirm password do not match");
-//        }
-//
-//        // Tetapkan password baru yang terenkripsi ke pengguna
-//        String encodedNewPassword = passwordEncoder.encode(changePasswordRequest.getNewPassword());
-//        currentUser.setPassword(encodedNewPassword);
-//
-//        // Simpan perubahan ke dalam database
-//        usersRepository.save(currentUser);
-//    }
-
-//    public ResponseEntity<?> changePassword(String userEmail, String oldPassword, String newPassword) {
-//        Users loginUser = usersRepository.findByEmail1(userEmail);
-//
-//        boolean passwordMatches = passwordEncoder.matches(oldPassword, loginUser.getPassword());
-//        if (passwordMatches) {
-//            loginUser.setPassword(passwordEncoder.encode(newPassword));
-//            usersRepository.save(loginUser);
-//            return ResponseEntity.ok(new MessageResponse(false, "Change Password Success"));
-//        } else {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new MessageResponse(true, "Old password is incorrect."));
-//        }
-//    }
-
-//    yang bisa
-//    public void changePassword(Long userId, String currentPassword, String newPassword) {
-//        Users user = usersRepository.findById(userId)
-//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-//
-//        if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
-//            throw new InvalidPasswordException("Current password is incorrect");
-//        }
-//
-//        user.setPassword(passwordEncoder.encode(newPassword));
-//        usersRepository.save(user);
-//    }
 
     public ResponseEntity<MessageResponse> changePassword(Long userId, String currentPassword, String newPassword) {
         Users user = usersRepository.findById(userId)
