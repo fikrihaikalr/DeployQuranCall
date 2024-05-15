@@ -59,6 +59,10 @@ public class UserService {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    public List<Users> getAllUser(){
+        log.info("Success");
+        return usersRepository.findAll();
+    }
 
     public Users getUserById(Long id){
         log.info("Get Data User By Id Succses!");

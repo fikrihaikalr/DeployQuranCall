@@ -56,6 +56,11 @@ public class UserController {
 //        }
 //    }
 
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllUser(){
+        return ResponseEntity.ok(userService.getAllUser());
+    }
+
     @GetMapping("/guru")
     public ResponseEntity<?> getTeacherUsers() {
         if (userService.performMaintenance()) {
