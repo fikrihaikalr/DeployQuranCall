@@ -23,6 +23,7 @@ import java.util.Map;
 @CrossOrigin(origins = "*")
 @Slf4j
 public class UserController {
+
     @Autowired
     UserService userService;
 
