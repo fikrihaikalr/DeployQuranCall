@@ -64,6 +64,7 @@ public class UserService {
         return usersRepository.findAll();
     }
 
+
     public Users getUserById(Long id){
         log.info("Get Data User By Id Succses!");
         return usersRepository.findById(id).orElse(null);
